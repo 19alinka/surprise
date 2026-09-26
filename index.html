@@ -1,0 +1,673 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#1a1418">
+<title>С Днём Рождения, Алиса 💗</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Manrope:wght@300;400;600;800&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { overflow-x:hidden; }
+  html { scroll-behavior:smooth; }
+  body {
+    background: #1a1418;
+    color: #f4e8ee;
+    font-family: 'Manrope', sans-serif;
+    min-height: 100vh;
+    min-height: 100dvh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- SCREENS ---------- */
+  .screen {
+    min-height: 100vh;
+    min-height: 100dvh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding: 48px 20px;
+    padding-bottom: calc(48px + env(safe-area-inset-bottom));
+    padding-top: calc(48px + env(safe-area-inset-top));
+    position:relative;
+    text-align:center;
+    width:100%;
+  }
+
+  /* ---------- INTRO ---------- */
+  #intro { background: radial-gradient(ellipse at center, #3a1f2e 0%, #1a1418 70%); }
+
+  .intro-kicker {
+    font-size: 13px;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: #e8a3c2;
+    opacity:0;
+    animation: fadeUp 1.2s 0.3s forwards;
+    margin-bottom: 20px;
+  }
+  .intro-name {
+    font-family:'Playfair Display', serif;
+    font-size: clamp(60px, 20vw, 130px);
+    font-weight:900;
+    line-height:0.95;
+    background: linear-gradient(135deg, #ffd0e2 0%, #e8a3c2 40%, #b0b0b8 100%);
+    -webkit-background-clip: text;
+    background-clip:text;
+    color:transparent;
+    opacity:0;
+    animation: fadeUp 1.4s 0.6s forwards;
+    text-shadow: 0 0 60px rgba(232,163,194,0.2);
+  }
+  .intro-sub {
+    margin-top: 20px;
+    font-size: clamp(15px, 4.2vw, 20px);
+    font-weight: 300;
+    color:#d8c4ce;
+    opacity:0;
+    animation: fadeUp 1.2s 1.1s forwards;
+    max-width: 520px;
+    padding: 0 4px;
+    line-height: 1.6;
+  }
+  .intro-sub .em { color:#e8a3c2; font-weight:600; }
+
+  /* ---------- BUTTONS ---------- */
+  .btn {
+    margin-top: 40px;
+    padding: 18px 42px;
+    font-family:'Manrope',sans-serif;
+    font-weight: 800;
+    font-size: 14px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color:#1a1418;
+    background: linear-gradient(135deg, #f7c8db, #e8a3c2);
+    border:none;
+    border-radius: 999px;
+    cursor:pointer;
+    opacity:0;
+    animation: fadeUp 1.2s 1.5s forwards, pulse 2.4s 2.6s infinite;
+    transition: transform .3s, box-shadow .3s;
+    box-shadow: 0 0 0 rgba(232,163,194,0.6);
+    min-height: 52px;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  .btn:active { transform: scale(0.97); }
+
+  .next-btn {
+    margin-top: 40px;
+    padding: 16px 34px;
+    border-radius: 999px;
+    border: 1px solid rgba(232,163,194,0.35);
+    background: rgba(232,163,194,0.05);
+    color: #f7c8db;
+    font-family:'Manrope',sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor:pointer;
+    transition: all .3s;
+    opacity:0;
+    animation: fadeUp 1s 2s forwards;
+    min-height: 48px;
+    touch-action: manipulation;
+  }
+  .next-btn:active {
+    background: rgba(232,163,194,0.18);
+    transform: scale(0.97);
+  }
+
+  /* ---------- DECOR ---------- */
+  .ball {
+    position:absolute;
+    font-size: 30px;
+    opacity:.15;
+    animation: floatBall 12s ease-in-out infinite;
+    pointer-events: none;
+  }
+  .ball:nth-child(1){ top:10%; left:6%; animation-delay:0s; }
+  .ball:nth-child(2){ top:72%; left:82%; animation-delay:-4s; font-size:24px;}
+  .ball:nth-child(3){ top:22%; right:8%; animation-delay:-7s; font-size:26px;}
+  .ball:nth-child(4){ bottom:12%; left:14%; animation-delay:-2s; font-size:20px;}
+
+  /* ---------- CONFETTI ---------- */
+  .confetti {
+    position:fixed; top:-10px; width:10px; height:14px;
+    z-index:9999; pointer-events:none; border-radius:2px;
+    animation: fall linear forwards;
+  }
+  @keyframes fall {
+    to { transform: translateY(105vh) rotate(720deg); opacity:0; }
+  }
+
+  /* ---------- GREETING ---------- */
+  #greeting { background: linear-gradient(180deg, #1a1418 0%, #241820 100%); }
+  .card {
+    max-width: 640px;
+    width: 100%;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(232,163,194,0.18);
+    border-radius: 24px;
+    padding: 44px 28px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    opacity:0;
+    transform: translateY(40px);
+    transition: opacity 1s, transform 1s;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+  }
+  .card.show { opacity:1; transform: translateY(0); }
+  .card h2 {
+    font-family:'Playfair Display',serif;
+    font-size: clamp(24px, 7vw, 44px);
+    font-weight: 700;
+    background: linear-gradient(135deg, #f7c8db, #e8a3c2, #b0b0b8);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    margin-bottom: 22px;
+    line-height:1.15;
+  }
+  .card p {
+    font-size: clamp(15px, 4vw, 19px);
+    line-height:1.75;
+    font-weight:300;
+    color:#e4d4dc;
+    margin-bottom: 16px;
+  }
+  .card p .hl { color:#f7c8db; font-weight:600; font-style:italic; }
+  .signature {
+    margin-top: 28px;
+    font-family:'Playfair Display',serif;
+    font-style: italic;
+    font-size: 20px;
+    color:#e8a3c2;
+    line-height:1.5;
+  }
+  .signature span {
+    display:block;
+    font-size: 11px;
+    font-style: normal;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color:#8a7a82;
+    margin-top: 6px;
+  }
+
+  /* ---------- TRANSITION ---------- */
+  #transition { background: radial-gradient(circle at center, #2e1a26 0%, #1a1418 70%); }
+  .trans-line {
+    font-family:'Playfair Display',serif;
+    font-size: clamp(26px, 8vw, 60px);
+    font-weight:700;
+    line-height:1.3;
+    opacity:0;
+    transition: opacity 1.2s, transform 1.2s;
+    transform: translateY(30px);
+    padding: 0 8px;
+  }
+  .trans-line.show { opacity:1; transform: translateY(0); }
+  .trans-line.old {
+    color:#5a4a52;
+    text-decoration: line-through;
+    text-decoration-color:#e8a3c2;
+    text-decoration-thickness:3px;
+  }
+  .trans-line.new { color:#f7c8db; margin-top: 20px; }
+  .arrow { font-size: 36px; margin: 20px 0; opacity:0; transition: opacity 1s; color:#e8a3c2; }
+  .arrow.show { opacity:1; }
+
+  /* ---------- CERTIFICATE ---------- */
+  #cert { background: linear-gradient(180deg, #1a1418 0%, #24161e 100%); }
+  .cert-wrap {
+    max-width: 700px;
+    width:100%;
+    padding: 6px;
+    border-radius: 22px;
+    background: linear-gradient(135deg, #e8a3c2, #b0b0b8, #f7c8db);
+    position: relative;
+    overflow:hidden;
+    opacity:0;
+    transform: scale(0.94);
+    transition: opacity 1.2s, transform 1.2s;
+    box-shadow: 0 30px 90px rgba(232,163,194,0.15);
+  }
+  .cert-wrap.show { opacity:1; transform: scale(1); }
+  .cert-wrap::before {
+    content:'';
+    position:absolute; inset:0;
+    background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.5) 50%, transparent 70%);
+    transform: translateX(-100%);
+    animation: shine 4s 1s infinite;
+    pointer-events: none;
+  }
+  @keyframes shine {
+    0% { transform: translateX(-100%); }
+    40%,100% { transform: translateX(100%); }
+  }
+  .cert-inner {
+    background: #1c151a;
+    border-radius: 18px;
+    padding: 40px 22px;
+    position:relative;
+    z-index:2;
+  }
+  .cert-label {
+    font-size: 10px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color:#8a7a82;
+    margin-bottom: 16px;
+  }
+  .cert-title {
+    font-family:'Playfair Display',serif;
+    font-size: clamp(22px, 6.5vw, 40px);
+    font-weight: 900;
+    background: linear-gradient(135deg, #f7c8db, #e8a3c2);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    line-height:1.2;
+    margin-bottom: 6px;
+  }
+  .cert-to {
+    font-family:'Playfair Display',serif;
+    font-style:italic;
+    font-size: clamp(20px, 5.5vw, 26px);
+    color:#fff;
+    margin: 18px 0;
+  }
+  .cert-desc {
+    font-size: clamp(14px, 3.8vw, 17px);
+    font-weight:300;
+    line-height:1.7;
+    color:#d8c4ce;
+    margin: 16px 0;
+  }
+  .cert-desc .num {
+    color:#e8a3c2;
+    font-weight:800;
+    font-family:'Playfair Display',serif;
+  }
+  .cert-foot {
+    margin-top: 32px;
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    flex-wrap:wrap;
+    gap:14px;
+    border-top: 1px dashed rgba(232,163,194,0.25);
+    padding-top: 20px;
+  }
+  .cert-foot .sig {
+    font-family:'Playfair Display',serif;
+    font-style:italic;
+    font-size: 18px;
+    color:#e8a3c2;
+  }
+  .cert-foot .date {
+    font-size: 10px;
+    letter-spacing: 3px;
+    color:#8a7a82;
+    text-transform: uppercase;
+  }
+  .badge-6 {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width: 50px; height:50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f7c8db, #e8a3c2);
+    color:#1a1418;
+    font-family:'Playfair Display',serif;
+    font-weight:900;
+    font-size:24px;
+    margin-bottom: 18px;
+    box-shadow: 0 0 30px rgba(232,163,194,0.5);
+  }
+
+  /* ---------- DETAILS ---------- */
+  #details { background: #1a1418; }
+  .section-title {
+    font-family:'Playfair Display',serif;
+    font-size: clamp(26px, 7vw, 48px);
+    font-weight:700;
+    color:#f7c8db;
+    margin-bottom: 36px;
+    opacity:0;
+    transform: translateY(30px);
+    transition: all 1s;
+  }
+  .section-title.show { opacity:1; transform:translateY(0); }
+  .grid {
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    max-width: 900px;
+    width:100%;
+  }
+  .detail {
+    background: rgba(255,255,255,0.03);
+    border:1px solid rgba(232,163,194,0.15);
+    border-radius: 20px;
+    padding: 26px 22px;
+    text-align:left;
+    opacity:0;
+    transform: translateY(30px);
+    transition: opacity .8s, transform .8s, border-color .3s, background .3s;
+  }
+  .detail.show { opacity:1; transform:translateY(0); }
+  .detail .ico { font-size: 30px; margin-bottom: 12px; display:block; }
+  .detail h3 {
+    font-family:'Playfair Display',serif;
+    font-size: 19px;
+    color:#f7c8db;
+    margin-bottom: 8px;
+  }
+  .detail p { font-size:14.5px; font-weight:300; line-height:1.65; color:#c4b4bc; }
+
+  /* ---------- FINAL ---------- */
+  #final { background: radial-gradient(ellipse at center, #2e1a26 0%, #1a1418 70%); }
+  .heart {
+    font-size: 76px;
+    animation: beat 1.4s ease-in-out infinite;
+    filter: drop-shadow(0 0 40px rgba(232,163,194,0.6));
+  }
+  @keyframes beat {
+    0%,100% { transform: scale(1); }
+    25% { transform: scale(1.15); }
+    50% { transform: scale(0.98); }
+    75% { transform: scale(1.1); }
+  }
+  .final-text {
+    font-family:'Playfair Display',serif;
+    font-size: clamp(24px, 7vw, 46px);
+    font-weight: 700;
+    color:#f7c8db;
+    margin-top: 20px;
+    line-height:1.3;
+  }
+  .final-sub {
+    margin-top: 18px;
+    font-size: clamp(14px, 3.8vw, 17px);
+    font-weight:300;
+    color:#c4b4bc;
+    max-width: 520px;
+    line-height:1.7;
+  }
+  .again {
+    margin-top: 36px;
+    padding: 16px 30px;
+    border-radius: 999px;
+    border:1px solid rgba(232,163,194,0.4);
+    background: transparent;
+    color:#f7c8db;
+    font-family:'Manrope',sans-serif;
+    font-weight:600;
+    font-size:12px;
+    letter-spacing: 2.5px;
+    text-transform:uppercase;
+    cursor:pointer;
+    transition: all .3s;
+    min-height: 48px;
+    touch-action: manipulation;
+  }
+  .again:active { background: rgba(232,163,194,0.15); transform: scale(0.97); }
+
+  /* ---------- ANIMATIONS ---------- */
+  @keyframes fadeUp {
+    from { opacity:0; transform: translateY(30px); }
+    to { opacity:1; transform: translateY(0); }
+  }
+  @keyframes pulse {
+    0%,100% { box-shadow: 0 0 0 0 rgba(232,163,194,0.5); }
+    50% { box-shadow: 0 0 0 20px rgba(232,163,194,0); }
+  }
+  @keyframes floatBall {
+    0%,100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-30px) rotate(180deg); }
+  }
+
+  .hidden { display:none !important; }
+
+  /* ---------- ХОВЕРЫ ТОЛЬКО НА ДЕСКТОПЕ ---------- */
+  @media (hover: hover) {
+    .btn:hover { transform: translateY(-3px) scale(1.04); box-shadow: 0 12px 30px rgba(232,163,194,0.4); }
+    .next-btn:hover { background: rgba(232,163,194,0.15); border-color:#e8a3c2; transform: translateY(-2px); box-shadow: 0 10px 30px rgba(232,163,194,0.2); }
+    .detail:hover { border-color: #e8a3c2; background: rgba(232,163,194,0.06); }
+    .again:hover { background: rgba(232,163,194,0.1); border-color:#e8a3c2; }
+  }
+
+  /* ---------- УЗКИЕ ТЕЛЕФОНЫ ---------- */
+  @media (max-width: 420px) {
+    .screen { padding: 36px 16px; padding-top: calc(36px + env(safe-area-inset-top)); padding-bottom: calc(36px + env(safe-area-inset-bottom)); }
+    .card { padding: 34px 20px; border-radius: 20px; }
+    .cert-inner { padding: 32px 18px; }
+    .intro-kicker { letter-spacing: 4px; font-size: 12px; }
+    .ball { font-size: 22px; opacity: .1; }
+    .btn { width: 100%; max-width: 320px; padding: 16px 24px; }
+    .next-btn { width: 100%; max-width: 300px; }
+    .again { width: 100%; max-width: 320px; padding: 15px 20px; letter-spacing: 2px; }
+    .grid { grid-template-columns: 1fr; gap: 12px; }
+    .detail { padding: 22px 18px; }
+    .heart { font-size: 64px; }
+  }
+
+  /* ---------- АЛЬБОМНАЯ ОРИЕНТАЦИЯ НА ТЕЛЕФОНЕ ---------- */
+  @media (max-height: 500px) and (orientation: landscape) {
+    .screen { padding: 20px 16px; }
+    .intro-name { font-size: clamp(40px, 12vw, 70px); }
+    .heart { font-size: 50px; }
+    .btn, .next-btn, .again { margin-top: 20px; }
+  }
+
+  /* ---------- УМЕНЬШЕННАЯ АНИМАЦИЯ ---------- */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+    .trans-line, .arrow, .card, .cert-wrap, .detail, .section-title { opacity: 1 !important; transform: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ INTRO ============ -->
+<section class="screen" id="intro">
+  <div class="ball">⚽</div>
+  <div class="ball">⚽</div>
+  <div class="ball">⚽</div>
+  <div class="ball">⚽</div>
+  <div class="intro-kicker">27 · Пысы мысы · #6</div>
+  <h1 class="intro-name">Алиса</h1>
+  <p class="intro-sub">
+    Сегодня тебе не 27. Сегодня тебе <span class="em">снова 18</span>, только теперь с деньгами, вкусом и правом делать что угодно 💅
+  </p>
+  <button class="btn" onclick="openGift()">Открыть подарок 🎁</button>
+</section>
+
+<!-- ============ GREETING ============ -->
+<section class="screen hidden" id="greeting">
+  <div class="card">
+    <h2>С днём рождения!!!</h2>
+    <p>
+      Мы долго думали, что подарить девушке, которая <span class="hl">и на поле королева, и вне поля — просто космос</span>.
+      Мяч у тебя летает красиво, а вот на матчевых фотках ты, конечно, хороша… но, признайся честно:
+    </p>
+    <p>
+      <span class="hl">тебе пора снять форму.</span>
+    </p>
+    <p>
+      Хотя бы на один день. Хотя бы перед объективом.
+    </p>
+  </div>
+  <button class="next-btn" onclick="nextScreen()">Продолжить ↓</button>
+</section>
+
+<!-- ============ TRANSITION ============ -->
+<section class="screen hidden" id="transition">
+  <div class="trans-line old">Фото с матчей.</div>
+  <div class="arrow">↓</div>
+  <div class="trans-line new">Фотосессия мечты.</div>
+  <button class="next-btn" onclick="nextScreen()">Продолжить ↓</button>
+</section>
+
+<!-- ============ CERTIFICATE ============ -->
+<section class="screen hidden" id="cert">
+  <div class="cert-wrap">
+    <div class="cert-inner">
+      <div class="cert-title">Смелый образ<br>и познание себя</div>
+      <p class="cert-desc">
+        Дарим тебе — фотосессию в <span class="num">смелом образе</span>: пиджак, голое тело, твои правила.
+        Фотограф уже ждёт и готов ловить ту самую Алису, которая <span class="num">не только футболистка и воспитательница</span>,
+        но и <span class="num">женщина, которой хочется любоваться</span>.
+      </p>
+      <p class="cert-desc">
+        От тебя требуется всего одна вещь — <span class="num">обратная связь по свободному дню</span>.
+        Всё остальное — наша забота. А дальше тебя ждёт незабываемое приключение познания своего тела.
+      </p>
+      <div class="cert-foot">
+        <div class="sig" style="margin-inline:auto;">Оксик &amp; Бычара</div>
+      </div>
+    </div>
+  </div>
+  <button class="next-btn" onclick="nextScreen()">Продолжить ↓</button>
+</section>
+
+<!-- ============ DETAILS ============ -->
+<section class="screen hidden" id="details">
+  <h2 class="section-title">Что тебя ждёт ✨</h2>
+  <div class="grid">
+    <div class="detail">
+      <span class="ico">🎩</span>
+      <h3>Смелый образ</h3>
+      <p>Тот самый пиджак. Голое тело. Твоя уверенность. Всё, что нужно — ты.</p>
+    </div>
+    <div class="detail">
+      <span class="ico">📸</span>
+      <h3>Фотограф</h3>
+      <p>Уже ждёт, уже настроен, уже представляет, как будет снимать королеву.</p>
+    </div>
+    <div class="detail">
+      <span class="ico">💄</span>
+      <h3>Стиль и свет</h3>
+      <p>Продуманная подача, свет, атмосфера. Ты просто приходишь и сияешь.</p>
+    </div>
+    <div class="detail">
+      <span class="ico">📅</span>
+      <h3>Твой день</h3>
+      <p>От тебя только одно — написать, когда ты свободна. Дальше магия сама.</p>
+    </div>
+  </div>
+  <button class="next-btn" onclick="nextScreen()">Продолжить ↓</button>
+</section>
+
+<!-- ============ FINAL ============ -->
+<section class="screen hidden" id="final">
+  <div class="heart">💗</div>
+  <h2 class="final-text">Наррy Birthday,<br>Alisa.</h2>
+  <p class="final-sub">
+    Оставайся такой же крутой, красивой и классной —
+    в жизни, на поле и перед камерой. И не забудь написать нам про свободный день 😉
+  </p>
+  <button class="again" onclick="restart()">Ну ладно, ещё раз полюбуемся</button>
+</section>
+
+<script>
+  const order = ['intro', 'greeting', 'transition', 'cert', 'details', 'final'];
+  let current = 0;
+
+  function revealIn(sectionId) {
+    const sec = document.getElementById(sectionId);
+
+    if (sectionId === 'greeting') {
+      const card = sec.querySelector('.card');
+      setTimeout(() => card.classList.add('show'), 150);
+    }
+    if (sectionId === 'transition') {
+      const old = sec.querySelector('.trans-line.old');
+      const arrow = sec.querySelector('.arrow');
+      const nw = sec.querySelector('.trans-line.new');
+      setTimeout(() => old.classList.add('show'), 150);
+      setTimeout(() => arrow.classList.add('show'), 900);
+      setTimeout(() => nw.classList.add('show'), 1500);
+    }
+    if (sectionId === 'cert') {
+      setTimeout(() => sec.querySelector('.cert-wrap').classList.add('show'), 150);
+    }
+if (sectionId === 'details') {
+      setTimeout(() => sec.querySelector('.section-title').classList.add('show'), 100);
+      sec.querySelectorAll('.detail').forEach((d, i) => {
+        setTimeout(() => d.classList.add('show'), 300 + i * 120);
+      });
+    }
+  }
+
+  function openGift() {
+    launchConfetti();
+    setTimeout(() => {
+      document.getElementById('intro').classList.add('hidden');
+      current = 1;
+      const next = document.getElementById(order[current]);
+      next.classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      revealIn(order[current]);
+    }, 500);
+  }
+
+  function nextScreen() {
+    if (current >= order.length - 1) return;
+    current++;
+    const next = document.getElementById(order[current]);
+    next.classList.remove('hidden');
+    setTimeout(() => {
+      next.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      revealIn(order[current]);
+    }, 60);
+  }
+
+  function restart() {
+    order.forEach(id => {
+      const sec = document.getElementById(id);
+      sec.classList.add('hidden');
+      sec.querySelectorAll('.show').forEach(el => el.classList.remove('show'));
+    });
+    const intro = document.getElementById('intro');
+    intro.classList.remove('hidden');
+    intro.querySelectorAll('.intro-kicker, .intro-name, .intro-sub, .btn').forEach(el => {
+      el.style.animation = 'none';
+      void el.offsetWidth;
+      el.style.animation = '';
+    });
+    current = 0;
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
+
+  function launchConfetti() {
+    const colors = ['#f7c8db','#e8a3c2','#b0b0b8','#ffffff','#ffd0e2'];
+    const count = window.innerWidth < 500 ? 80 : 130;
+    for (let i = 0; i < count; i++) {
+      const c = document.createElement('div');
+      c.className = 'confetti';
+      c.style.left = Math.random() * 100 + 'vw';
+      c.style.background = colors[Math.floor(Math.random()*colors.length)];
+      c.style.animationDuration = (Math.random()*2 + 2.5) + 's';
+      c.style.animationDelay = Math.random()*0.5 + 's';
+      c.style.width = (Math.random()*6 + 6) + 'px';
+      c.style.height = (Math.random()*8 + 8) + 'px';
+      document.body.appendChild(c);
+      setTimeout(() => c.remove(), 5000);
+    }
+  }
+</script>
+</body>
+</html>
